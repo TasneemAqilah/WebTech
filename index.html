@@ -1,0 +1,252 @@
+<html>
+  <head>
+    <style>
+      table.center {
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid black;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+      table.center tr td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 20px;
+      }
+      table tr td a {
+        display: block;
+        text-decoration: none;
+      }
+      table th.heading {
+        background-color: #ffcba5;
+        font-weight: bold;
+        font-size: 20px;
+      }
+
+      td.blue {
+        background-color: #deeaf6;
+      }
+      table tr {
+        font-size: 20px;
+      }
+
+      .bold {
+        font-weight: bold;
+      }
+      .nobold {
+        font-weight: normal;
+      }
+
+      table tr td.score {
+        background-color: #f9e29c;
+        font-weight: bold;
+        font-size: 20px;
+      }
+      table tr.buttons {
+        background-color: #98ff98;
+      }
+
+      #num1,
+      #num2,
+      #num3 {
+        font-weight: bold;
+        font-size: 50px;
+        color: black;
+      }
+      span.special {
+        color: red;
+        font-weight: bold;
+        font-size: 30px;
+      }
+      span.chosen {
+        color: black;
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <table width="60%" height="250" class="center">
+      <th colspan="3" class="heading">Part 2: Game</th>
+      <tr>
+        <td width="33%" class="blue bold">
+          Your chosen number: <span class="chosen nobold" id="link">0</span>
+        </td>
+        <td width="33%" align="center" class="blue">
+          Choose a number:
+          <select id="opt" onchange="chosenNum()">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+        </td>
+        <td width="33%" id="score" align="center" class="score">
+          Current Score:<span class="special" id="count">0</span>
+        </td>
+      </tr>
+      <tr class="buttons">
+        <td colspan="3" align="center">
+          <input
+            type="button"
+            id="start"
+            value="Start Game"
+            onclick="start(); resetValue()"
+          />
+          <input
+            type="button"
+            id="stop"
+            value="Stop Game"
+            onclick="stop()"
+            disabled
+          />
+        </td>
+      </tr>
+      <tr>
+        <td id="num1" height="100px" align="center"><a id="c1"></a></td>
+        <td id="num2" align="center"><a id="c2"></a></td>
+        <td id="num3" align="center"><a id="c3"></a></td>
+      </tr>
+    </table>
+  </body>
+  <script>
+    var num1 = document.getElementById("num1");
+    var num2 = document.getElementById("num2");
+    var num3 = document.getElementById("num3");
+
+    function makeid() {
+      var combo = "059"; //1t combo to be generated
+      var combo1 = "148"; //2nd combo which does not repeat 1st combo
+      var combo2 = "2367"; //3rd combo which does not repeat 2nd and 1st combo
+
+      for (var i = 0; i < combo.length; i++)
+        c1 = combo.charAt(Math.floor(Math.random() * combo.length));
+      {
+        document.getElementById("c1").innerHTML = c1;
+      }
+      c2 = combo1.charAt(Math.floor(Math.random() * combo1.length));
+      {
+        document.getElementById("c2").innerHTML = c2;
+      }
+      c3 = combo2.charAt(Math.floor(Math.random() * combo2.length));
+      {
+        document.getElementById("c3").innerHTML = c3;
+      }
+    }
+
+    var flag = true;
+    var i = 0;
+    var color = ["pink", "red", "yellow", "lightgreen", "lightblue"];
+    var color1 = ["brown", "yellow", "grey", "purple", "pink"];
+    var color2 = ["yellow", "lightblue", "pink", "green", "orange"];
+    function changeColor() {
+      if (flag) {
+        document.getElementById("num1").style.background = color[i];
+        document.getElementById("num2").style.background = color1[i];
+        document.getElementById("num3").style.background = color2[i];
+        i = (i + 1) % color.length;
+      } else {
+        document.getElementById("num1").style.background = color[i];
+        document.getElementById("num2").style.background = color1[i];
+        document.getElementById("num3").style.background = color2[i];
+        i = (i + 1) % color.length;
+      }
+      flag = !flag;
+    }
+
+    onClick = "check1()";
+
+    function disableButton() {
+      document.getElementById("start").disabled = true;
+      document.getElementById("stop").disabled = false;
+      document.getElementById("opt").disabled = true;
+    }
+
+    function enableButton() {
+      document.getElementById("start").disabled = false;
+      document.getElementById("stop").disabled = true;
+      document.getElementById("opt").disabled = false;
+    }
+
+    function resetValue() {
+      var x = 0;
+      document.getElementById("count").innerHTML = x;
+    }
+
+    function start() {
+      num1.addEventListener("click", check1);
+      num2.addEventListener("click", check2);
+      num3.addEventListener("click", check3);
+
+      myInterval = setTimeout(function () {
+        start();
+        disableButton();
+        makeid();
+        changeColor();
+      }, 2000);
+    }
+
+    function stop() {
+      clearTimeout(myInterval);
+      enableButton();
+
+      num1.removeEventListener("click", check1);
+      num2.removeEventListener("click", check2);
+      num3.removeEventListener("click", check3);
+    }
+
+    function chosenNum() {
+      var opt = document.getElementById("opt").value;
+
+      document.getElementById("link").innerHTML = opt;
+    }
+
+    function check1() {
+      var c1 = document.getElementById("c1").innerHTML;
+      var opt = document.getElementById("opt").value;
+      var val = document.getElementById("count").innerHTML;
+      var count = parseInt(val);
+
+      if (c1 == opt) {
+        count = count + 4;
+        document.getElementById("count").innerHTML = count;
+      } else {
+        count = count - 3;
+        document.getElementById("count").innerHTML = count;
+      }
+    }
+    function check2() {
+      var c2 = document.getElementById("c2").innerHTML;
+      var opt = document.getElementById("opt").value;
+      var val = document.getElementById("count").innerHTML;
+      var count = parseInt(val);
+
+      if (c2 == opt) {
+        count = count + 4;
+        document.getElementById("count").innerHTML = count;
+      } else {
+        count = count - 3;
+        document.getElementById("count").innerHTML = count;
+      }
+    }
+    function check3() {
+      var c3 = document.getElementById("c3").innerHTML;
+      var opt = document.getElementById("opt").value;
+      var val = document.getElementById("count").innerHTML;
+      var count = parseInt(val);
+
+      if (c3 == opt) {
+        count = count + 4;
+        document.getElementById("count").innerHTML = count;
+      } else {
+        count = count - 3;
+        document.getElementById("count").innerHTML = count;
+      }
+    }
+  </script>
+</html>
